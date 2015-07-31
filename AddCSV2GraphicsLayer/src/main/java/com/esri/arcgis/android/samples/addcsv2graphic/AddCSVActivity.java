@@ -775,7 +775,7 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
     if (mLocDispMgr != null) {
       // Re-enable the navigation mode.
       notifTimes = 0;
-      Toast.makeText(AddCSVActivity.this,"Turn the GPS on to get accurate location", Toast.LENGTH_SHORT).show();
+      Toast.makeText(AddCSVActivity.this,"I gotcha", Toast.LENGTH_SHORT).show();
       mLocDispMgr.start();
       mLocDispMgr.setAutoPanMode(LocationDisplayManager.AutoPanMode.LOCATION);
       Graphic a = redZone.getGraphic(0);
@@ -820,7 +820,7 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
             notifTimes++;
           }
       }
-      mLocDispMgr.setAutoPanMode(LocationDisplayManager.AutoPanMode.LOCATION);
+      mLocDispMgr.setAutoPanMode(LocationDisplayManager.AutoPanMode.OFF);
     }
 
 
@@ -831,7 +831,8 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
     public void onProviderEnabled(String provider) { }
 
     @Override
-    public void onProviderDisabled(String provider) { }
+    public void onProviderDisabled(String provider) {
+      Toast.makeText(AddCSVActivity.this,"Turn the GPS on to get accurate location", Toast.LENGTH_SHORT).show();}
   };
 
   public void sendNotification(String title) {
