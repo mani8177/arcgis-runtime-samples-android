@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/drawRedZone"
+        android:title="Draw Red Zone"/>
+    <item android:id="@+id/stopNotif"
+        android:title="Stopping Notification"/>
+</menu>

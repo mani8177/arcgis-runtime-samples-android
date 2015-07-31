@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Find Storm Reports</string>
+    <string name="app_name">.CrimeTEST</string>
     <string name="date">Choose a date</string>
+    <string name="search_hint">Search address or place</string>
+    <string name="search_title">Search</string>
+    <string name="suggestion_text">Suggestion</string>
+
+    <!-- progress dialog messages -->
+    <string name="address_search">Searching for Address</string>
+
+    <!-- Toast messages -->
+    <string name="addressSearchFailed">Address search failed</string>
+    <string name="noResultsFound">No Results found</string>
 
 </resources>
