@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?> 
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
+    android:layout_height="fill_parent">
     
     <!-- MapView layout and initial extent -->
     <com.esri.android.map.MapView
   		android:id="@+id/map"
   		android:layout_width="fill_parent"
   		android:layout_height="fill_parent"
-  		initExtent = "-139.236077, 22.187405, -60.222405, 55.825973">
+        url="http://www.arcgis.com/home/webmap/viewer.html?webmap=4d96c2b76fbb4ef0b73e98d6dadf3c6b"
+  		>
   	</com.esri.android.map.MapView>
 
     <ImageButton

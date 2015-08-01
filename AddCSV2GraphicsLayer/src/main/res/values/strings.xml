@@ -13,5 +13,9 @@
     <!-- Toast messages -->
     <string name="addressSearchFailed">Address search failed</string>
     <string name="noResultsFound">No Results found</string>
+    <string name="title_activity_flash_screen">FlashScreenActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

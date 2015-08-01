@@ -63,6 +63,7 @@ import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
 import com.esri.core.geometry.SpatialReference;
 import com.esri.core.geometry.Unit;
+import com.esri.core.io.UserCredentials;
 import com.esri.core.map.CallbackListener;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.PictureMarkerSymbol;
@@ -193,6 +194,7 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
 
   private SpatialReference mapSpatialReference;
   private static ArrayList<LocatorSuggestionResult> suggestionsList;
+  static UserCredentials credentials;
 
 
   /** Called when the activity is first created. */
@@ -231,7 +233,8 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
     mMapView.enableWrapAround(true);
     // attribute map
     mMapView.setEsriLogoVisible(true);
-
+    //get the credentials
+    credentials = getCred();
 
     // Add the route graphic layer (shows the full route)
     routeLayer = new GraphicsLayer();
@@ -241,8 +244,8 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
     try {
       mRouteTask = RouteTask
               .createOnlineRouteTask(
-                      "http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Network/USA/NAServer/Route",
-                      null);
+                      "http://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World",
+                      credentials);
     } catch (Exception e1) {
       e1.printStackTrace();
     }
@@ -706,6 +709,7 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
     }
 
 
+    Log.d(TAG + "RouteResults", mResults.getRoutes().size() + "");
     curRoute = mResults.getRoutes().get(0);
     // Symbols for the route and the destination (blue line, checker flag)
     SimpleLineSymbol routeSymbol = new SimpleLineSymbol(Color.BLUE, 3);
@@ -775,6 +779,7 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
     if (mLocDispMgr != null) {
       // Re-enable the navigation mode.
       notifTimes = 0;
+
       Toast.makeText(AddCSVActivity.this,"I gotcha", Toast.LENGTH_SHORT).show();
       mLocDispMgr.start();
       mLocDispMgr.setAutoPanMode(LocationDisplayManager.AutoPanMode.LOCATION);
@@ -1276,6 +1281,17 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
 
   }
 
+
+  private static UserCredentials getCred() {
+
+
+    credentials = new UserCredentials();
+
+    credentials.setUserAccount("mani8177","iamtheking31");
+
+
+    return credentials;
+  }
 
 
 }
