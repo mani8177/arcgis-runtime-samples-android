@@ -18,7 +18,9 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,6 +35,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.BaseColumns;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +43,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -94,6 +98,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -196,6 +201,12 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
   private static ArrayList<LocatorSuggestionResult> suggestionsList;
   static UserCredentials credentials;
 
+  //Speech
+
+  private TextView txtSpeechInput;
+  private ImageButton btnSpeak;
+  private final int REQ_CODE_SPEECH_INPUT = 100;
+
 
   /** Called when the activity is first created. */
   @Override
@@ -233,6 +244,50 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
     mMapView.enableWrapAround(true);
     // attribute map
     mMapView.setEsriLogoVisible(true);
+
+
+    //speech
+    txtSpeechInput = (TextView) findViewById(R.id.txtSpeechInput);
+    btnSpeak = (ImageButton) findViewById(R.id.btnSpeak);
+
+
+    //txtSpeechInput.setVisibility(View.GONE);
+    txtSpeechInput.setOnClickListener(
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                String sentence = txtSpeechInput.getText().toString();
+                String target = "to";
+                StringBuilder address = new StringBuilder();
+                if(!sentence.isEmpty())
+                {
+                  String[] tokens = sentence.split(" ");
+                  for(int i = 0; i < tokens.length; i++) {
+                    if(tokens[i].equalsIgnoreCase("to"))
+                    {
+                      for(int j = i + 1; j < tokens.length; j++){
+                        address.append(tokens[j]);
+                        address.append(" ");
+                      }
+                      Log.d(TAG + "SPEECH TEXT",address.toString());
+                      mSearchView.setQuery(address,true);
+                    }
+                  }
+                }
+                txtSpeechInput.setVisibility(View.INVISIBLE);
+              }
+            }
+    );
+    btnSpeak.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        promptSpeechInput();
+      }
+    });
+
+
+
     //get the credentials
     credentials = getCred();
 
@@ -336,6 +391,51 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
       }
     });
   }
+
+  //Speech
+  /**
+   * Showing google speech input dialog
+   * */
+  private void promptSpeechInput() {
+    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+    intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+            getString(R.string.speech_prompt));
+    try {
+      startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+    } catch (ActivityNotFoundException a) {
+      Toast.makeText(getApplicationContext(),
+              getString(R.string.speech_not_supported),
+              Toast.LENGTH_SHORT).show();
+    }
+  }
+
+
+  /**
+   * Receiving speech input
+   * */
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    switch (requestCode) {
+      case REQ_CODE_SPEECH_INPUT: {
+        if (resultCode == RESULT_OK && null != data) {
+
+          ArrayList<String> result = data
+                  .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+          txtSpeechInput.setVisibility(View.VISIBLE);
+          txtSpeechInput.setText(result.get(0));
+
+        }
+        break;
+      }
+
+    }
+  }
+
   public void onSearchButtonClicked(String address) {
     hideKeyboard();
     mMapViewHelper.removeAllGraphics();
@@ -745,6 +845,8 @@ public class AddCSVActivity extends Activity implements ActionBar.OnNavigationLi
     routeSummary = String.format("%s%n%.1f minutes (%.1f miles)",
             curRoute.getRouteName(), curRoute.getTotalMinutes(),
             curRoute.getTotalMiles());
+
+    mMapView.setExtent(curRoute.getEnvelope(), 250);
 
   }
 

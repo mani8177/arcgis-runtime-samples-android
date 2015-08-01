@@ -5,4 +5,8 @@
     <color name="material_blue_500">#2196f3</color>
     <color name="material_blue_700">#1976D2</color>
     <color name="material_green_A200">#a5d6a7</color>
+
+    <color name="white">#ffffff</color>
+    <color name="bg_gradient_start">#31244e</color>
+    <color name="bg_gradient_end">#6b394c</color>
 </resources>
