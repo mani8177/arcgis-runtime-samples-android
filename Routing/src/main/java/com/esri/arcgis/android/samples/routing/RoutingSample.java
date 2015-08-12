@@ -13,9 +13,6 @@
 
 package com.esri.arcgis.android.samples.routing;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
@@ -50,6 +47,7 @@ import com.esri.core.geometry.GeometryEngine;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polyline;
 import com.esri.core.geometry.SpatialReference;
+import com.esri.core.io.UserCredentials;
 import com.esri.core.map.Graphic;
 import com.esri.core.symbol.PictureMarkerSymbol;
 import com.esri.core.symbol.SimpleLineSymbol;
@@ -61,6 +59,9 @@ import com.esri.core.tasks.na.RouteParameters;
 import com.esri.core.tasks.na.RouteResult;
 import com.esri.core.tasks.na.RouteTask;
 import com.esri.core.tasks.na.StopGraphic;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RoutingSample extends Activity implements
 		RoutingListFragment.onDrawerListSelectedListener,
@@ -107,6 +108,7 @@ public class RoutingSample extends Activity implements
 	final SpatialReference egs = SpatialReference.create(4326);
 	// Index of the currently selected route segment (-1 = no selection)
 	int selectedSegmentID = -1;
+	static UserCredentials credentials;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -127,7 +129,9 @@ public class RoutingSample extends Activity implements
 		map.addLayer(tileLayer);
 
 
-
+		credentials = new UserCredentials();
+		// credentials.setUserAccount("willcrick_esri", "");
+		credentials.setUserAccount("mani8177", "iamtheking31");
 
 
 		// Add the route graphic layer (shows the full route)
@@ -138,8 +142,8 @@ public class RoutingSample extends Activity implements
 		try {
 			mRouteTask = RouteTask
 					.createOnlineRouteTask(
-							"http://sampleserver3.arcgisonline.com/ArcGIS/rest/services/Network/USA/NAServer/Route",
-							null);
+							"http://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World",
+							credentials);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -306,6 +310,8 @@ public class RoutingSample extends Activity implements
 			public void run() {
 				try {
 					// Start building up routing parameters
+
+
 					RouteParameters rp = mRouteTask
 							.retrieveDefaultRouteTaskParameters();
 					NAFeaturesAsFeature rfaf = new NAFeaturesAsFeature();
